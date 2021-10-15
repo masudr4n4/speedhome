@@ -1,0 +1,29 @@
+import os
+from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
+from py.path import local
+
+
+def before_scenario(context, scenario):
+    """
+    U
+    :param context:
+    :param scenario:
+    :return:
+    """
+    context.browser = webdriver.Chrome(executable_path=ChromeDriverManager().install())
+    context.browser.maximize_window()
+    context.browser.implicitly_wait(20)
+
+
+def after_step(context, step):
+    project_path = local(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+    if step.status.name != 'passed':
+        if not os.path.isdir(project_path.join("screenshots").strpath):
+            os.mkdir(project_path.join("screenshots").strpath)
+        context.browser.save_screenshot(
+            project_path.join("screenshots", f"{context.scenario.name[:60]}...scn.png").strpath)
+
+
+def after_scenario(context, scenario):
+    context.browser.quit()
