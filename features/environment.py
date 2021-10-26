@@ -1,4 +1,6 @@
 import os
+
+import allure
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from py.path import local
@@ -26,4 +28,10 @@ def after_step(context, step):
 
 
 def after_scenario(context, scenario):
+    stdout = context.stdout_capture.getvalue()
+    stderr = context.stderr_capture.getvalue()
+    if stdout:
+        allure.attach(stdout, name="stdout", attachment_type=allure.attachment_type.TEXT)
+    if stderr:
+        allure.attach(stderr, name="stderr", attachment_type=allure.attachment_type.TEXT)
     context.browser.quit()
