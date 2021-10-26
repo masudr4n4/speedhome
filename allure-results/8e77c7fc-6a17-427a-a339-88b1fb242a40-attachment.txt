@@ -1,2 +1,0 @@
-CLicking on the navigation bar
-Verifying the login page is correct 
